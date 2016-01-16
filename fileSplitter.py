@@ -4,10 +4,11 @@ import sys
 import shutil
 def fileSplitter(file,chunk,tmpDirname):
     fileSize=os.path.getsize(file)
+    chunk=chunk-1
     chunkSize=fileSize/chunk
-    print("File Size : "+fileSize+ " bytes")
-    print("Chunk Size : "+chunkSize+ " bytes")
-    print("Parts : "+ chunk)
+    print("File Size : "+str(fileSize)+ " bytes")
+    print("Chunk Size : "+str(chunkSize)+ " bytes")
+    print("Parts : "+ str(chunk+1))
     print("")
     pointer=chunkSize
     tmpfileName='part'
@@ -25,13 +26,15 @@ def fileSplitter(file,chunk,tmpDirname):
         pointer+=chunkSize
         tmpFilecount+=1
 
+
 def cleanupTmp(tmpDirname):
     shutil.rmtree(tmpDirname)
+
 
 def fileMerger(tmpDirname,finalFileName,parts):
     tmpfileName='part'
     tmpFilecount=0
-    while(tmpFilecount <= parts):
+    while(tmpFilecount < parts):
         fr=open(tmpDirname+'/'+tmpfileName+str(tmpFilecount),'rb')
         buf=fr.read(os.path.getsize(tmpDirname+'/'+tmpfileName+str(tmpFilecount)))
         fw=open(finalFileName,'ab')
@@ -47,6 +50,8 @@ def printman():
     print("[+] To split usage : "+sys.argv[0]+" s <file> <parts> <path to store parts>")
     print("[+] To merge back : "+sys.argv[0]+" m <new filename> <parts> <path of parts>")
 
+
+
 def configureDir(dirName):
     try:
         if(os.path.exists(dirName)):
@@ -54,6 +59,7 @@ def configureDir(dirName):
         os.mkdir(dirName)
     except OSError:
         print("Error happened in creating tmp dir")
+
 
 if len(sys.argv )==5:
     if(sys.argv[1]=="s"):
